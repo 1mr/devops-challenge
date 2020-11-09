@@ -1,0 +1,12 @@
+node_modules
+dist
+.git
+.gitlab
+.gitlab-ci.yml
+.github
+npm-debug.log
+.vscode
+coverage
+README.md
+LICENSE
+.env
