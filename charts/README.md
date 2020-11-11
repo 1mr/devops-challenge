@@ -63,11 +63,11 @@ Transfer/sec:    185.43KB
 
 Current client error rate is around **1%** *(0.9623%)*
 
-![nginx-ingress](https://github.com/1mr/devops-challenge/benchmarks/nginx-ingress.png)
+![nginx-ingress](https://github.com/1mr/devops-challenge/raw/master/benchmarks/nginx-ingress.png)
 
-![nginx requests](https://github.com/1mr/devops-challenge/benchmarks/ngx_requests.png)
+![nginx requests](https://github.com/1mr/devops-challenge/raw/master/benchmarks/ngx_requests.png)
 
-![status codes](https://github.com/1mr/devops-challenge/benchmarks/ngx_status_code.png)
+![status codes](https://github.com/1mr/devops-challenge/raw/master/benchmarks/ngx_status_code.png)
 
 Tested on:
 
