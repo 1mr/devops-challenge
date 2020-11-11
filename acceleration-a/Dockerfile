@@ -1,5 +1,9 @@
 FROM node:10.23.0-alpine
 WORKDIR  /usr/src/app
+
+RUN apk add --no-cache tini
+ENTRYPOINT ["/sbin/tini", "-e", "143", "--"]
+
 COPY package*.json /usr/src/app/
 RUN yarn install
 COPY . .
