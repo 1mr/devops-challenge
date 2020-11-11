@@ -1,0 +1,8 @@
+{{- if .Values.application.env -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "fullname" . }}
+data:
+{{ toYaml .Values.application.env | indent 2 }}
+{{- end }}

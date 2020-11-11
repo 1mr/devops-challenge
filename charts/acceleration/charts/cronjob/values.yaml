@@ -1,0 +1,21 @@
+jobs:
+  - name: deletecrashedpods 
+    schedule: "* * * * *"
+    failedJobsHistoryLimit: 2
+    successfulJobsHistoryLimit: 3
+    concurrencyPolicy: Forbid
+    restartPolicy: Never
+    image:
+      repository: 1am3r/join-scripts
+      tag: sha-ec06ad5
+      pullPolicy: IfNotPresent
+    command: ["python"]
+    args:
+      - "./deleteCrashLoopBackOffPods.py"
+    resources:
+      limits:
+        cpu: 100m
+        memory: 64Mi
+      requests:
+        cpu: 100m
+        memory: 64Mi

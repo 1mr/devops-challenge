@@ -1,0 +1,78 @@
+replicaCount: 2
+
+image:
+  repository: 1am3r/join-acceleration-a
+  pullPolicy: IfNotPresent
+  tag: sha-aaaab17
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+application:
+  secretName:
+  env:
+    NODE_ENV: production
+    WEB_PORT: "3002"
+
+service:
+  type: ClusterIP
+  internalPort: 3002
+  externalPort: 3002
+
+livenessProbe:
+  path: "/health"
+  initialDelaySeconds: 15
+  timeoutSeconds: 5
+  scheme: "HTTP"
+  probeType: "httpGet"
+readinessProbe:
+  path: "/health"
+  initialDelaySeconds: 15
+  timeoutSeconds: 3
+  scheme: "HTTP"
+  probeType: "httpGet"
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+resources:
+  limits:
+    cpu: 200m
+    memory: 128Mi
+  requests:
+    cpu: 200m
+    memory: 128Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 2
+  maxReplicas: 4
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+# podDisruptionBudget: {}
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 1

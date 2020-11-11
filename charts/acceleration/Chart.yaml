@@ -1,0 +1,20 @@
+apiVersion: v2
+name: acceleration
+description: A Helm chart for Kubernetes
+icon: https://join-acceleration.1mr.me/acceleration.png
+type: application
+version: 0.1.0
+appVersion: 0.1.0
+dependencies:
+- name: a
+  version: "0.1.0"
+  repository: "@a"
+- name: dv
+  version: "0.1.0"
+  repository: "@dv"
+- name: calc
+  version: "0.1.0"
+  repository: "@calc"
+- name: cronjob
+  version: "0.1.0"
+  repository: "@cronjob"

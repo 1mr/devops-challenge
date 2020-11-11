@@ -1,0 +1,69 @@
+{{- if and .Values.ingress.enabled .Values.service.url -}}
+{{- if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
+apiVersion: networking.k8s.io/v1beta1
+{{- else -}}
+apiVersion: extensions/v1beta1
+{{- end }}
+kind: Ingress
+metadata:
+  name: {{ include "fullname" . }}
+  labels:
+    {{- include "labels" . | nindent 4 }}
+  annotations:
+{{- if .Values.ingress.annotations }}
+{{ toYaml .Values.ingress.annotations | indent 4 }}
+{{- end }}
+{{- with .Values.ingress.modSecurity }}
+{{- if .enabled }}
+    nginx.ingress.kubernetes.io/modsecurity-transaction-id: "$server_name-$request_id"
+    nginx.ingress.kubernetes.io/modsecurity-snippet: |
+      SecRuleEngine {{ .secRuleEngine | default "DetectionOnly" | title }}
+{{- range $rule := .secRules }}
+{{ (include "secrule" $rule) | indent 6 }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- if .Values.prometheus.metrics }}
+    nginx.ingress.kubernetes.io/server-snippet: |-
+      location /metrics {
+          deny all;
+      }
+
+{{- end }}
+spec:
+{{- if .Values.ingress.tls.enabled }}
+  tls:
+  - hosts:
+{{- if .Values.service.commonName }}
+    - {{ template "hostname" .Values.service.commonName }}
+{{- end }}
+    - {{ template "hostname" .Values.service.url }}
+{{- if .Values.service.additionalHosts }}
+{{- range $host := .Values.service.additionalHosts }}
+    - {{ template "hostname" $host }}
+{{- end -}}
+{{- end }}
+    secretName: {{ .Values.ingress.tls.secretName | default (printf "%s-tls" (include "fullname" .)) }}
+{{- end }}
+  rules:
+  - host: {{ template "hostname" .Values.service.url }}
+    http:
+      &httpRule
+      paths:
+      - path: {{ .Values.ingress.path | default "/" }}
+        backend:
+          serviceName: {{ template "fullname" . }}
+          servicePort: {{ .Values.service.externalPort }}
+{{- if .Values.service.commonName }}
+  - host: {{ template "hostname" .Values.service.commonName }}
+    http:
+      <<: *httpRule
+{{- end -}}
+{{- if .Values.service.additionalHosts }}
+{{- range $host := .Values.service.additionalHosts }}
+  - host: {{ template "hostname" $host }}
+    http:
+      <<: *httpRule
+{{- end -}}
+{{- end -}}
+{{- end -}}

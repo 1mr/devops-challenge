@@ -1,0 +1,14 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ $.Release.Namespace }}
+  labels:
+    app.kubernetes.io/part-of: cronjob
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ $.Release.Namespace }}
+subjects:
+  - kind: ServiceAccount
+    name: default
+    namespace: {{ $.Release.Namespace }}
