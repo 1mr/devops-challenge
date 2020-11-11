@@ -5,23 +5,11 @@ import argparse
 from os import path
 
 
-if path.exists('/run/secrets/kubernetes.io/serviceaccount/namespace'):
-    config.load_incluster_config()
-    with open('/run/secrets/kubernetes.io/serviceaccount/namespace', 'r') as ns:
-        namespace = ns.read().strip()
-else:
-    config.load_kube_config()
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-ns", "--namespace", help="namespace name")
-    args = parser.parse_args()
+def killPods(ns='default'):
+    """
 
-if hasattr(args, 'namespace') or namespace:
-
-    if hasattr(args, 'namespace'):
-        ns = args.namespace
-    elif namespace:
-        ns = namespace
-
+    :type ns: str
+    """
     v1 = client.CoreV1Api()
     print("Check CrashLoopBackOff Pods:")
     ret = v1.list_namespaced_pod(namespace=ns)
@@ -39,3 +27,16 @@ if hasattr(args, 'namespace') or namespace:
                         print("Deleting pod...")
                         print("%s\t%s\t%s\t%s" % (name, reason, restart, msg))
                         v1.delete_namespaced_pod(namespace=ns, name=name)
+
+
+if path.exists('/run/secrets/kubernetes.io/serviceaccount/namespace'):
+    config.load_incluster_config()
+    with open('/run/secrets/kubernetes.io/serviceaccount/namespace', 'r') as ns:
+        namespace = ns.read().strip()
+    killPods(namespace)
+else:
+    config.load_kube_config()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-ns", "--namespace", help="namespace name")
+    args = parser.parse_args()
+    killPods(args.namespace)
