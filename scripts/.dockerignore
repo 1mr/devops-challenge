@@ -15,4 +15,3 @@ coverage.xml
 *,cover
 *.log
 .git
-requirements.txt
