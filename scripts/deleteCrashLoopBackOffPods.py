@@ -15,7 +15,7 @@ else:
     parser.add_argument("-ns", "--namespace", help="namespace name")
     args = parser.parse_args()
 
-if args.namespace or namespace:
+if hasattr(args, 'namespace') or namespace:
 
     if args.namespace:
         ns = args.namespace
