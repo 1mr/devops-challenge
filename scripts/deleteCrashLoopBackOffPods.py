@@ -17,7 +17,7 @@ else:
 
 if hasattr(args, 'namespace') or namespace:
 
-    if args.namespace:
+    if hasattr(args, 'namespace'):
         ns = args.namespace
     elif namespace:
         ns = namespace
